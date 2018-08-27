@@ -1,0 +1,161 @@
+---
+swagger: "2.0"
+info:
+  description: "This is the API for the Product catalog"
+  version: "1.0.0"
+  title: "Product Catalog API"
+host: "virtserver.swaggerhub.com"
+basePath: "/amissig/product/1.0.0"
+schemes:
+- "https"
+paths:
+  /product:
+    post:
+      summary: "adds an new product"
+      description: "Adds an product to the system"
+      operationId: "addProduct"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Product"
+        description: "Product to add to the catalog"
+        required: false
+        schema:
+          $ref: "#/definitions/Product"
+      responses:
+        201:
+          description: "item created"
+        400:
+          description: "invalid input, object invalid"
+        409:
+          description: "an existing item already exists"
+      x-swagger-router-controller: "Default"
+  /salesperson:
+    post:
+      summary: "adds an new salesperson"
+      description: "Adds an salesperson to the system"
+      operationId: "addSalesPerson"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "SalesPerson"
+        description: "SalesPerson to add"
+        required: false
+        schema:
+          $ref: "#/definitions/SalesPerson"
+      responses:
+        201:
+          description: "item created"
+        400:
+          description: "invalid input, object invalid"
+        409:
+          description: "an existing item already exists"
+      x-swagger-router-controller: "Default"
+  /products:
+    get:
+      summary: "get a list of products with their salesperson"
+      description: "Serach in the product catalogus and return a list of products"
+      operationId: "getProducts"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "productgroup"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "brand"
+        in: "query"
+        required: false
+        type: "string"
+      - name: "name"
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "succesfully executed search"
+          schema:
+            $ref: "#/definitions/Products"
+      x-swagger-router-controller: "Default"
+definitions:
+  Product:
+    type: "object"
+    required:
+    - "brand"
+    - "modelnumber"
+    - "modeltype"
+    - "name"
+    - "productgroup"
+    properties:
+      productgroup:
+        type: "string"
+        example: "Laptops"
+      brand:
+        type: "string"
+        example: "HP"
+      name:
+        type: "string"
+        example: "Elitebook 850 G5"
+      modeltype:
+        type: "string"
+        example: "i7-8550U"
+      modelnumber:
+        type: "string"
+        example: "3JX19EA#ABH"
+    example:
+      modeltype: "i7-8550U"
+      modelnumber: "3JX19EA#ABH"
+      productgroup: "Laptops"
+      name: "Elitebook 850 G5"
+      brand: "HP"
+  SalesPerson:
+    type: "object"
+    required:
+    - "initials"
+    - "name"
+    - "productgroups"
+    properties:
+      name:
+        type: "string"
+        example: "Dijkstra"
+      prefix:
+        type: "string"
+        example: "van"
+      initials:
+        type: "string"
+        example: "J"
+      productgroups:
+        type: "array"
+        example:
+        - "Laptops"
+        - "Desktops"
+        items:
+          type: "string"
+    example:
+      productgroups:
+      - "Laptops"
+      - "Desktops"
+      prefix: "van"
+      initials: "J"
+      name: "Dijkstra"
+  Products:
+    type: "array"
+    items:
+      $ref: "#/definitions/Products_inner"
+  Products_inner:
+    properties:
+      id:
+        type: "integer"
+        example: 1
+      product:
+        type: "string"
+        example: "HP Elitebook 850 G5 i7-8550U"
+      salesperson:
+        type: "string"
+        example: "J Dijkstra"
